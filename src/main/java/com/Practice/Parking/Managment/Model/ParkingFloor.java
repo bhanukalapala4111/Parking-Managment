@@ -1,4 +1,4 @@
-package com.Practice.Model;
+package com.Practice.Parking.Managment.Model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,5 +27,7 @@ public class ParkingFloor {
     @Column
     private int availableCapacity;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "parkingFloor")
     private List<ParkingSlot> slots = new ArrayList<>();
 }

@@ -1,4 +1,4 @@
-package com.Practice.Model;
+package com.Practice.Parking.Managment.Model;
 
 import jakarta.persistence.*;
 import lombok.*;

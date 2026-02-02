@@ -1,8 +1,10 @@
-package com.Practice.Service;
+package com.Practice.Parking.Managment.Service;
 
-import com.Practice.Dtos.CreateParkingFloorRequest;
-import com.Practice.Model.ParkingFloor;
-import com.Practice.Repository.ParkingFloorRepository;
+import com.Practice.Parking.Managment.Dtos.CreateParkingFloorRequest;
+import com.Practice.Parking.Managment.Model.ParkingFloor;
+import com.Practice.Parking.Managment.Model.ParkingSlot;
+import com.Practice.Parking.Managment.Model.SlotStatus;
+import com.Practice.Parking.Managment.Repository.ParkingFloorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,14 @@ public class ParkingFloorService {
 
     public long addFloor(CreateParkingFloorRequest addFloorRequest){
         ParkingFloor parkingFloor= ParkingFloor.builder().floorNumber(addFloorRequest.getFloorNumber()).floorCapacity(addFloorRequest.getFloorCapacity()).availableCapacity(addFloorRequest.getAvailableCapacity()).build();
+        for (int i = 0; i < addFloorRequest.getFloorCapacity();i++){
+            ParkingSlot slot = new ParkingSlot();
+            slot.setSlotNumber(i);
+            slot.setStatus(SlotStatus.AVAILABLE);
+            slot.setParkingFloor(parkingFloor);
+
+            parkingFloor.getSlots().add(slot);
+        }
         return this.parkingRepository.save(parkingFloor).getId();
     }
     public List<ParkingFloor> getAvailableSlots(){
@@ -27,5 +37,9 @@ public class ParkingFloorService {
             }
         }
         return parkAvailability;
+    }
+
+    public List<ParkingFloor> findByAvailableCapacityGreaterThanOrderByFloorNumberAsc(int value){
+        return this.parkingRepository.findByAvailableCapacityGreaterThanOrderByFloorNumberAsc(value);
     }
 }

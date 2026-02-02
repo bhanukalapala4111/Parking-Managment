@@ -1,8 +1,8 @@
-package com.Practice.Controller;
+package com.Practice.Parking.Managment.Controller;
 
-import com.Practice.Dtos.CreateParkingFloorRequest;
-import com.Practice.Model.ParkingFloor;
-import com.Practice.Service.ParkingFloorService;
+import com.Practice.Parking.Managment.Dtos.CreateParkingFloorRequest;
+import com.Practice.Parking.Managment.Model.ParkingFloor;
+import com.Practice.Parking.Managment.Service.ParkingFloorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +15,13 @@ public class ParkingFloorController {
     ParkingFloorService parkingService;
 
     @PostMapping("addFloor")
-    long AddFloor(@RequestBody CreateParkingFloorRequest addFloor){
+    public long AddFloor(@RequestBody CreateParkingFloorRequest addFloor){
         return this.parkingService.addFloor(addFloor);
     }
 
     @GetMapping("getAvailableSlots")
     @ResponseBody
-    List<ParkingFloor> getAvailableSlots(){
+    public List<ParkingFloor> getAvailableSlots(){
         return parkingService.getAvailableSlots();
     }
 

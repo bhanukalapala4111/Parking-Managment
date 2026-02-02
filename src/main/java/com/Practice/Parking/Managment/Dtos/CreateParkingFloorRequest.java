@@ -1,4 +1,4 @@
-package com.Practice.Dtos;
+package com.Practice.Parking.Managment.Dtos;
 
 import lombok.*;
 

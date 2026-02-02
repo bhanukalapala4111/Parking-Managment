@@ -1,15 +1,13 @@
-package com.Practice.Service;
+package com.Practice.Parking.Managment.Service;
 
-import com.Practice.Dtos.CreateUserRequest;
-import com.Practice.Dtos.UserResponse;
-import com.Practice.Model.Company;
-import com.Practice.Model.User;
-import com.Practice.Repository.CompanyRepository;
-import com.Practice.Repository.UserRepository;
+import com.Practice.Parking.Managment.Dtos.CreateUserRequest;
+import com.Practice.Parking.Managment.Dtos.UserResponse;
+import com.Practice.Parking.Managment.Model.Company;
+import com.Practice.Parking.Managment.Model.User;
+import com.Practice.Parking.Managment.Repository.CompanyRepository;
+import com.Practice.Parking.Managment.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,8 +18,6 @@ public class UserService {
     @Autowired
     CompanyRepository companyRepository;
 
-    @Autowired
-    UserResponse userResponse;
 
     public long createUser(CreateUserRequest createUser) {
         Company company = companyRepository.findByCompanyName(createUser.getCompany())
@@ -31,7 +27,7 @@ public class UserService {
     }
     public UserResponse getUser(long Id){
         User user=this.userRepository.getById(Id);
-
-        return this.userResponse.toUser(user, companyRepository);
+        Company company=companyRepository.findById(user.getCompanyId());
+        return UserResponse.builder().userName(user.getUserName()).role(user.getRole()).email(user.getEmail()).company(company.getCompanyName()).build();
     }
 }
