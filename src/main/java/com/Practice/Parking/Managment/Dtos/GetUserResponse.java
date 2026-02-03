@@ -8,16 +8,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
-public class CreateUserRequest {
+@ToString
+public class GetUserResponse {
 
-    private String userName;
-
-    private Role role;
-
-    private String email;
-
-    @NonNull
-    private String company;
+    User user;
 }

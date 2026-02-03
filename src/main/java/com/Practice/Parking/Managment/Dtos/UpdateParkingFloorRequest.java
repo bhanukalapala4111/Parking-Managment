@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-public class CreateParkingFloorRequest {
+public class UpdateParkingFloorRequest {
 
     int floorNumber;
 

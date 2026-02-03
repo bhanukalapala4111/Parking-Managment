@@ -1,6 +1,8 @@
 package com.Practice.Parking.Managment.Controller;
 
 import com.Practice.Parking.Managment.Dtos.CreateParkingFloorRequest;
+import com.Practice.Parking.Managment.Dtos.GetParkingFloorResponse;
+import com.Practice.Parking.Managment.Dtos.UpdateParkingFloorRequest;
 import com.Practice.Parking.Managment.Model.ParkingFloor;
 import com.Practice.Parking.Managment.Service.ParkingFloorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ public class ParkingFloorController {
 
     @PostMapping("addFloor")
     public long AddFloor(@RequestBody CreateParkingFloorRequest addFloor){
-        return this.parkingService.addFloor(addFloor);
+        return this.parkingService.addFloor(addFloor.toParkingFloor());
     }
 
     @GetMapping("getAvailableSlots")
@@ -25,6 +27,10 @@ public class ParkingFloorController {
         return parkingService.getAvailableSlots();
     }
 
-
+    // update floor
+    @PatchMapping("update")
+    public GetParkingFloorResponse updateParkingFloor(@RequestBody UpdateParkingFloorRequest updateParkingFloorRequest, long id){
+        return this.parkingService.updateParkingFloor(updateParkingFloorRequest.toParkingFloor(),id);
+    }
 
 }

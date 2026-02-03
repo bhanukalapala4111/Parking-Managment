@@ -1,7 +1,6 @@
 package com.Practice.Parking.Managment.Dtos;
 
 import com.Practice.Parking.Managment.Model.Company;
-import jakarta.persistence.Column;
 import lombok.*;
 
 @Getter
@@ -10,14 +9,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class CreateCompanyRequest {
+public class UpdateCompanyRequest {
 
     String companyName;
 
     int totalCapacity;
 
-    public Company toComapny(){
-        return Company.builder().companyName(companyName).totalCapacity(totalCapacity).availableCapacity(totalCapacity).build();
-    }
+    int availableCapacity;
 
+    public Company toCompany(){
+        return Company.builder().companyName(companyName).totalCapacity(totalCapacity).availableCapacity(availableCapacity).build();
+    }
 }

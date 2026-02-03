@@ -1,6 +1,7 @@
 package com.Practice.Parking.Managment.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,6 +29,7 @@ public class ParkingSlot {
 
     @ManyToOne
     @JoinColumn(name = "floor_id")
+    @JsonIgnoreProperties("slots")
     private ParkingFloor parkingFloor;
 
     private Long companyId;
