@@ -19,8 +19,8 @@ public class CompanyController {
     }
 
     //update company details
-    @PatchMapping("/update")
-    public GetCompanyResponse updateCompany(@RequestBody UpdateCompanyRequest updateCompanyRequest, Long id){
+    @PatchMapping("/update/{id}")
+    public GetCompanyResponse updateCompany(@RequestBody UpdateCompanyRequest updateCompanyRequest,@PathVariable Long id){
         return this.companyService.updateCompany(updateCompanyRequest.toCompany(),id);
     }
     //get company details

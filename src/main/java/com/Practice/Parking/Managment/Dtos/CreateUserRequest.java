@@ -18,6 +18,8 @@ public class CreateUserRequest {
 
     private String email;
 
+    private String password;
+
     @NonNull
     private String company;
 }

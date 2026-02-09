@@ -13,9 +13,9 @@ public class UpdateCompanyRequest {
 
     String companyName;
 
-    int totalCapacity;
+    Integer totalCapacity=0;
 
-    int availableCapacity;
+    Integer availableCapacity=0;
 
     public Company toCompany(){
         return Company.builder().companyName(companyName).totalCapacity(totalCapacity).availableCapacity(availableCapacity).build();

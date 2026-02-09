@@ -38,8 +38,7 @@ public class ParkingSlotService {
             throw new RuntimeException("Company parking capacity exhausted");
         }
 
-        List<ParkingFloor> floors =
-                parkingFloorService.findByAvailableCapacityGreaterThanOrderByFloorNumberAsc(0);
+        List<ParkingFloor> floors = parkingFloorService.findByAvailableCapacityGreaterThanOrderByFloorNumberAsc(0);
 
         if (floors.isEmpty()) {
             throw new RuntimeException("No parking floors available");
@@ -57,6 +56,7 @@ public class ParkingSlotService {
 
         ParkingSlot slot = slots.get(0);
         slot.setStatus(SlotStatus.OCCUPIED);
+        slot.setCompanyId(userResponse.getUser().getCompanyId());
 
         floor.setAvailableCapacity(floor.getAvailableCapacity() - 1);
 
@@ -73,9 +73,12 @@ public class ParkingSlotService {
 
         ParkingSlot releaseParkingSlot=this.parkingSlot.findById(id).orElseThrow( ()-> new RuntimeException("No Slot with the given ID"));
         releaseParkingSlot.setStatus(SlotStatus.AVAILABLE);
+
         Company company= companyService.getCompany(releaseParkingSlot.getCompanyId()).getCompany();
         company.setAvailableCapacity(company.getAvailableCapacity()+1);
         releaseParkingSlot.getParkingFloor().setAvailableCapacity(releaseParkingSlot.getParkingFloor().getAvailableCapacity()+1);
+        releaseParkingSlot.setCompanyId(0L);
+        this.parkingSlot.save(releaseParkingSlot);
         return true;
     }
     public long addSlot(ParkingSlot parkingSlot1){

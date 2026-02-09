@@ -48,7 +48,7 @@ public class CompanyService {
         if(updatedCompany.getTotalCapacity()>0 && existCompany.getTotalCapacity()!=updatedCompany.getTotalCapacity()){
             int diff=updatedCompany.getTotalCapacity()-existCompany.getTotalCapacity();
             existCompany.setTotalCapacity(updatedCompany.getTotalCapacity());
-            existCompany.setTotalCapacity(existCompany.getAvailableCapacity()+diff);
+            existCompany.setAvailableCapacity(existCompany.getAvailableCapacity()+diff);
         }
         return existCompany;
     }

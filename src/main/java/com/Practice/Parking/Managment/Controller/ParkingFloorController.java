@@ -28,8 +28,8 @@ public class ParkingFloorController {
     }
 
     // update floor
-    @PatchMapping("update")
-    public GetParkingFloorResponse updateParkingFloor(@RequestBody UpdateParkingFloorRequest updateParkingFloorRequest, long id){
+    @PatchMapping("update/{id}")
+    public GetParkingFloorResponse updateParkingFloor(@RequestBody UpdateParkingFloorRequest updateParkingFloorRequest, @PathVariable long id){
         return this.parkingService.updateParkingFloor(updateParkingFloorRequest.toParkingFloor(),id);
     }
 

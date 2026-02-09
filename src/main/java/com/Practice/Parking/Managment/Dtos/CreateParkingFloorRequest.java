@@ -11,9 +11,9 @@ import lombok.*;
 @Builder
 public class CreateParkingFloorRequest {
 
-    int floorNumber;
+    Integer floorNumber;
 
-    int floorCapacity;
+    Integer floorCapacity;
 
     public ParkingFloor toParkingFloor(){
         return ParkingFloor.builder().floorNumber(floorNumber).floorCapacity(floorCapacity).availableCapacity(floorCapacity).build();

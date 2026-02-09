@@ -14,7 +14,7 @@ public class CreateCompanyRequest {
 
     String companyName;
 
-    int totalCapacity;
+    Integer totalCapacity;
 
     public Company toComapny(){
         return Company.builder().companyName(companyName).totalCapacity(totalCapacity).availableCapacity(totalCapacity).build();
