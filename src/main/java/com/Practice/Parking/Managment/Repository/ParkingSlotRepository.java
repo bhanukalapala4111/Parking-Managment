@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ParkingSlotRepository extends JpaRepository<ParkingSlot,Long> {
-    List<ParkingSlot>
-    findByParkingFloorFloorNumberAndStatusOrderBySlotNumberAsc(
+public interface ParkingSlotRepository extends JpaRepository<ParkingSlot, Long> {
+    List<ParkingSlot> findByParkingFloorFloorNumberAndStatusOrderBySlotNumberAsc(
             int floorNumber,
-            SlotStatus status
-    );
+            SlotStatus status);
+
+    List<ParkingSlot> findByCompanyIdAndStatus(Long companyId, SlotStatus status);
 }

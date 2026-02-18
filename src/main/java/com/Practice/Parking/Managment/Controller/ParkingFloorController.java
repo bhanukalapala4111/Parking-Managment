@@ -17,20 +17,26 @@ public class ParkingFloorController {
     ParkingFloorService parkingService;
 
     @PostMapping("addFloor")
-    public long AddFloor(@RequestBody CreateParkingFloorRequest addFloor){
+    public long AddFloor(@RequestBody CreateParkingFloorRequest addFloor) {
         return this.parkingService.addFloor(addFloor.toParkingFloor());
     }
 
     @GetMapping("getAvailableSlots")
     @ResponseBody
-    public List<ParkingFloor> getAvailableSlots(){
+    public List<ParkingFloor> getAvailableSlots() {
         return parkingService.getAvailableSlots();
     }
 
     // update floor
     @PatchMapping("update/{id}")
-    public GetParkingFloorResponse updateParkingFloor(@RequestBody UpdateParkingFloorRequest updateParkingFloorRequest, @PathVariable long id){
-        return this.parkingService.updateParkingFloor(updateParkingFloorRequest.toParkingFloor(),id);
+    public GetParkingFloorResponse updateParkingFloor(@RequestBody UpdateParkingFloorRequest updateParkingFloorRequest,
+            @PathVariable long id) {
+        return this.parkingService.updateParkingFloor(updateParkingFloorRequest.toParkingFloor(), id);
+    }
+
+    @GetMapping("/floors")
+    public List<GetParkingFloorResponse> getAllFloors() {
+        return this.parkingService.getAllFloors();
     }
 
 }

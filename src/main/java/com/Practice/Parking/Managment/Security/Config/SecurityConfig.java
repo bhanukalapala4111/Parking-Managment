@@ -20,34 +20,34 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
     private final JwtFilter jwtFilter;
+
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config
-    ) throws Exception {
+            AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**","/user/**").permitAll()
-                        .requestMatchers("/slot/**").hasRole("EMPLOYEE")
-                        .requestMatchers("/company/**","/parking/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
+        http
+                .cors(cors -> {
+                }) // enables CorsConfig bean
+                .csrf(AbstractHttpConfigurer::disable)
+
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**", "/user/**", "/error").permitAll()
+                        .requestMatchers("/slot/**").hasRole("EMPLOYEE")
+                        .requestMatchers("/company/**", "/parking/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

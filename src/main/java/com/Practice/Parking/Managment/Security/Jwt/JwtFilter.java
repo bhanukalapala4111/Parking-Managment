@@ -18,48 +18,48 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-
     private final JwtUtil jwtUtil;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
+        String requestURI = request.getRequestURI();
+
+        // Skip JWT processing for public auth endpoints
+        if (requestURI.startsWith("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String authHeader = request.getHeader("Authorization");
-
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-
         String token = authHeader.substring(7);
 
+        try {
+            if (jwtUtil.isTokenValid(token)) {
+                Long userId = jwtUtil.getUserId(token);
+                String role = jwtUtil.getRole(token);
 
-        if (!jwtUtil.isTokenValid(token)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-
-        Long userId = jwtUtil.getUserId(token);
-        String role = jwtUtil.getRole(token);
-
-
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userId,
                         null,
-                        List.of(new SimpleGrantedAuthority("ROLE_" + role))
-                );
+                        List.of(new SimpleGrantedAuthority("ROLE_" + role)));
 
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            // Log warning and continue chain without authentication
+            logger.warn("JWT validation failed: " + e.getMessage());
+        }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
     }
 }

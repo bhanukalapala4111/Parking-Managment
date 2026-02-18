@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -25,23 +27,24 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     public long createUser(CreateUserRequest createUser) {
         Company company = companyRepository.findByCompanyName(createUser.getCompany())
                 .orElseThrow(() -> new RuntimeException("Company not found"));
-        User user= User.builder().userName(createUser.getUserName()).role(createUser.getRole()).password(passwordEncoder.encode(createUser.getPassword())).email(createUser.getEmail()).companyId(company.getId()).build();
+        User user = User.builder().userName(createUser.getUserName()).role(createUser.getRole())
+                .password(passwordEncoder.encode(createUser.getPassword())).email(createUser.getEmail())
+                .companyId(company.getId()).build();
         return this.userRepository.save(user).getId();
     }
-    public GetUserResponse getUser(long Id){
-        User user=this.userRepository.getById(Id);
+
+    public GetUserResponse getUser(long Id) {
+        User user = this.userRepository.getById(Id);
         return GetUserResponse.builder().user(user).build();
     }
 
     public GetUserResponse updateUser(UpdateUserRequest request, long id) {
 
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
         User mergedUser = merge(existingUser, request);
 
@@ -51,6 +54,7 @@ public class UserService {
                 .user(savedUser)
                 .build();
     }
+
     private User merge(User existingUser, UpdateUserRequest request) {
 
         if (request.getUserName() != null &&
@@ -70,11 +74,19 @@ public class UserService {
 
         // company is mandatory
         if (request.getCompany() != null &&
-                !Objects.equals(companyRepository.findById(existingUser.getCompanyId()).getCompanyName(), request.getCompany())) {
-            Company company =companyRepository.findByCompanyName(request.getCompany()).orElseThrow(()->new RuntimeException("Company not found by Name"));
+                !Objects.equals(companyRepository.findById(existingUser.getCompanyId()).getCompanyName(),
+                        request.getCompany())) {
+            Company company = companyRepository.findByCompanyName(request.getCompany())
+                    .orElseThrow(() -> new RuntimeException("Company not found by Name"));
             existingUser.setCompanyId(company.getId());
         }
 
         return existingUser;
+    }
+
+    public List<GetUserResponse> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> GetUserResponse.builder().user(user).build())
+                .collect(Collectors.toList());
     }
 }

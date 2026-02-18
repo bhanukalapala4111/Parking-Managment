@@ -1,7 +1,6 @@
 package com.Practice.Parking.Managment.Dtos;
 
 import com.Practice.Parking.Managment.Model.Role;
-import com.Practice.Parking.Managment.Model.User;
 import lombok.*;
 
 @Getter
