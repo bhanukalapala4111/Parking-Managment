@@ -23,13 +23,13 @@ public class CompanyController {
     // update company details
     @PatchMapping("/update/{id}")
     public GetCompanyResponse updateCompany(@RequestBody UpdateCompanyRequest updateCompanyRequest,
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
         return this.companyService.updateCompany(updateCompanyRequest.toCompany(), id);
     }
     // get company details
 
     @GetMapping("/get/{Id}")
-    public GetCompanyResponse getCompany(@PathVariable long Id) {
+    public GetCompanyResponse getCompany(@PathVariable("Id") long Id) {
         return this.companyService.getCompany(Id);
     }
 

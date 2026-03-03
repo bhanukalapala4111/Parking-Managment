@@ -15,7 +15,10 @@ public class CreateParkingFloorRequest {
 
     Integer floorCapacity;
 
-    public ParkingFloor toParkingFloor(){
-        return ParkingFloor.builder().floorNumber(floorNumber).floorCapacity(floorCapacity).availableCapacity(floorCapacity).build();
+    Integer availableCapacity;
+
+    public ParkingFloor toParkingFloor() {
+        return ParkingFloor.builder().floorNumber(floorNumber).floorCapacity(floorCapacity)
+                .availableCapacity(availableCapacity).build();
     }
 }

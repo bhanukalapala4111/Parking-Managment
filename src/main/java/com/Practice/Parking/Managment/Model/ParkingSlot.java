@@ -1,6 +1,5 @@
 package com.Practice.Parking.Managment.Model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,6 +32,8 @@ public class ParkingSlot {
     private ParkingFloor parkingFloor;
 
     private Long companyId;
+
+    private Long occupantUserId;
 
     @CreationTimestamp
     private Date createdOn;

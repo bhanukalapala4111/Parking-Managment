@@ -67,5 +67,4 @@ public class CompanyService {
                 .map(company -> GetCompanyResponse.builder().company(company).build())
                 .collect(Collectors.toList());
     }
-
 }

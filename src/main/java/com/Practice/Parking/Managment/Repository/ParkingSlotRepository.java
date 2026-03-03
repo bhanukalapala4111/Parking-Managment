@@ -12,4 +12,6 @@ public interface ParkingSlotRepository extends JpaRepository<ParkingSlot, Long> 
             SlotStatus status);
 
     List<ParkingSlot> findByCompanyIdAndStatus(Long companyId, SlotStatus status);
+
+    List<ParkingSlot> findByOccupantUserId(Long occupantUserId);
 }

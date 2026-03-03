@@ -30,11 +30,11 @@ public class ParkingFloorController {
     // update floor
     @PatchMapping("update/{id}")
     public GetParkingFloorResponse updateParkingFloor(@RequestBody UpdateParkingFloorRequest updateParkingFloorRequest,
-            @PathVariable long id) {
+            @PathVariable("id") long id) {
         return this.parkingService.updateParkingFloor(updateParkingFloorRequest.toParkingFloor(), id);
     }
 
-    @GetMapping("/floors")
+    @GetMapping("/all")
     public List<GetParkingFloorResponse> getAllFloors() {
         return this.parkingService.getAllFloors();
     }

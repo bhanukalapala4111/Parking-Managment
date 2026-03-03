@@ -1,0 +1,22 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.Practice:Parking-Managment >-------------------
+[INFO] Building Parking-Managment 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ Parking-Managment ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ Parking-Managment ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 39 source files with javac [debug parameters release 17] to target\classes
+[WARNING] /C:/Users/HP/OneDrive/Documents/Bhanu Practice/Parking-Managment/src/main/java/com/Practice/Parking/Managment/Dtos/UpdateCompanyRequest.java:[16,13] @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default, add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+[WARNING] /C:/Users/HP/OneDrive/Documents/Bhanu Practice/Parking-Managment/src/main/java/com/Practice/Parking/Managment/Dtos/UpdateCompanyRequest.java:[18,13] @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default, add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.660 s
+[INFO] Finished at: 2026-02-19T17:35:56+05:30
+[INFO] ------------------------------------------------------------------------

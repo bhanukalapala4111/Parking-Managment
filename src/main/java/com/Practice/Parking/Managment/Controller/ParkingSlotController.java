@@ -14,18 +14,18 @@ public class ParkingSlotController {
     ParkingSlotService parkingSlotService;
 
     @PostMapping("/book/{Id}")
-    public long getSlot(@PathVariable long Id) {
+    public long getSlot(@PathVariable("Id") long Id) {
         return this.parkingSlotService.getSlot(Id);
     }
 
     // Release slot
     @PatchMapping("update/{Id}")
-    public boolean releaseSlot(@PathVariable long Id) {
+    public boolean releaseSlot(@PathVariable("Id") long Id) {
         return this.parkingSlotService.releaseSlot(Id);
     }
 
     @GetMapping("/user/{userId}")
-    public List<ParkingSlot> getUserBookings(@PathVariable long userId) {
+    public List<ParkingSlot> getUserBookings(@PathVariable("userId") long userId) {
         return this.parkingSlotService.getUserBookings(userId);
     }
 }

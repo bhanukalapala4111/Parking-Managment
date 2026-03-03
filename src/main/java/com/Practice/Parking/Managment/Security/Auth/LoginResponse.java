@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginResponse {
+    private Long id;
     private String token;
 
     @JsonProperty("userName")

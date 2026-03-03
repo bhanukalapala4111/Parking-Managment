@@ -2,8 +2,9 @@ package com.Practice.Parking.Managment.Security.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -11,7 +12,8 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "my-secure-key-for-parking-management-system-2024-strong-and-long-64-bit-key";
+    @Value("${jwt.secret}")
+    private String SECRET;
 
     public String generateToken(Long userId, String role) {
         return Jwts.builder()

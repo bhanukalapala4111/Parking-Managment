@@ -5,8 +5,10 @@ import com.Practice.Parking.Managment.Dtos.GetUserResponse;
 import com.Practice.Parking.Managment.Model.Company;
 import com.Practice.Parking.Managment.Model.ParkingFloor;
 import com.Practice.Parking.Managment.Model.ParkingSlot;
+import com.Practice.Parking.Managment.Model.SlotHistory;
 import com.Practice.Parking.Managment.Model.SlotStatus;
 import com.Practice.Parking.Managment.Repository.ParkingSlotRepository;
+import com.Practice.Parking.Managment.Repository.SlotHistoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class ParkingSlotService {
 
     @Autowired
     CompanyService companyService;
+
+    @Autowired
+    SlotHistoryRepository slotHistoryRepository;
 
     @Transactional
     public long getSlot(long userId) {
@@ -56,6 +61,7 @@ public class ParkingSlotService {
         ParkingSlot slot = slots.get(0);
         slot.setStatus(SlotStatus.OCCUPIED);
         slot.setCompanyId(userResponse.getUser().getCompanyId());
+        slot.setOccupantUserId(userId);
 
         floor.setAvailableCapacity(floor.getAvailableCapacity() - 1);
 
@@ -69,10 +75,23 @@ public class ParkingSlotService {
         return slot.getId();
     }
 
+    @Transactional
     public boolean releaseSlot(long id) {
 
         ParkingSlot releaseParkingSlot = this.parkingSlot.findById(id)
                 .orElseThrow(() -> new RuntimeException("No Slot with the given ID"));
+
+        // Save history before clearing occupant data
+        if (releaseParkingSlot.getOccupantUserId() != null && releaseParkingSlot.getOccupantUserId() != 0) {
+            SlotHistory history = SlotHistory.builder()
+                    .userId(releaseParkingSlot.getOccupantUserId())
+                    .slotId(releaseParkingSlot.getId())
+                    .slotNumber(releaseParkingSlot.getSlotNumber())
+                    .floorNumber(releaseParkingSlot.getParkingFloor().getFloorNumber())
+                    .build();
+            slotHistoryRepository.save(history);
+        }
+
         releaseParkingSlot.setStatus(SlotStatus.AVAILABLE);
 
         Company company = companyService.getCompany(releaseParkingSlot.getCompanyId()).getCompany();
@@ -80,6 +99,7 @@ public class ParkingSlotService {
         releaseParkingSlot.getParkingFloor()
                 .setAvailableCapacity(releaseParkingSlot.getParkingFloor().getAvailableCapacity() + 1);
         releaseParkingSlot.setCompanyId(0L);
+        releaseParkingSlot.setOccupantUserId(0L);
         this.parkingSlot.save(releaseParkingSlot);
         return true;
     }
@@ -89,8 +109,6 @@ public class ParkingSlotService {
     }
 
     public List<ParkingSlot> getUserBookings(long userId) {
-        GetUserResponse userResponse = userService.getUser(userId);
-        Long companyId = userResponse.getUser().getCompanyId();
-        return parkingSlot.findByCompanyIdAndStatus(companyId, SlotStatus.OCCUPIED);
+        return parkingSlot.findByOccupantUserId(userId);
     }
 }

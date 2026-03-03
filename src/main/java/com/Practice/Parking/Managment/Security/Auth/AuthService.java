@@ -33,7 +33,7 @@ public class AuthService {
 
             String token = jwtUtil.generateToken(user.getId(), user.getRole().name());
 
-            return new LoginResponse(token, user.getUserName(), user.getRole());
+            return new LoginResponse(user.getId(), token, user.getUserName(), user.getRole());
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid email or password");
         } catch (Exception e) {
