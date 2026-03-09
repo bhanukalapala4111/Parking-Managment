@@ -14,7 +14,7 @@ import java.util.Date;
 @ToString
 @Builder
 @Entity
-@Table(name="User")
+@Table(name = "User")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +33,7 @@ public class User {
     private long companyId;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private Role role;
 
     @CreationTimestamp

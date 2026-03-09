@@ -1,10 +1,12 @@
 package com.Practice.Parking.Managment.Service;
 
-import com.Practice.Parking.Managment.Dtos.CreateCompanyRequest;
+import com.Practice.Parking.Managment.Dtos.CompanyStatsResponse;
 import com.Practice.Parking.Managment.Dtos.GetCompanyResponse;
 import com.Practice.Parking.Managment.Model.Company;
+import com.Practice.Parking.Managment.Model.SlotStatus;
 import com.Practice.Parking.Managment.Repository.CompanyRepository;
-import jakarta.validation.constraints.Null;
+import com.Practice.Parking.Managment.Repository.ParkingSlotRepository;
+import com.Practice.Parking.Managment.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,12 @@ public class CompanyService {
 
     @Autowired
     CompanyRepository companyRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    ParkingSlotRepository parkingSlotRepository;
 
     public Long createCompany(Company company) {
         return this.companyRepository.save(company).getId();
@@ -66,5 +74,19 @@ public class CompanyService {
         return companyRepository.findAll().stream()
                 .map(company -> GetCompanyResponse.builder().company(company).build())
                 .collect(Collectors.toList());
+    }
+
+    public CompanyStatsResponse getCompanyStats(long companyId) {
+        long userCount = userRepository.findByCompanyId(companyId).size();
+        int totalSlots = parkingSlotRepository.findByCompanyId(companyId).size();
+        int availableSlots = parkingSlotRepository.findByCompanyIdAndStatus(companyId, SlotStatus.AVAILABLE).size();
+        int occupiedSlots = parkingSlotRepository.findByCompanyIdAndStatus(companyId, SlotStatus.OCCUPIED).size();
+
+        return CompanyStatsResponse.builder()
+                .userCount(userCount)
+                .totalSlots(totalSlots)
+                .availableSlots(availableSlots)
+                .occupiedSlots(occupiedSlots)
+                .build();
     }
 }

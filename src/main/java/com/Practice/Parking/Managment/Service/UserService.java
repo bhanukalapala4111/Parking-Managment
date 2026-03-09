@@ -30,6 +30,7 @@ public class UserService {
     public long createUser(CreateUserRequest createUser) {
         Company company = companyRepository.findByCompanyName(createUser.getCompany())
                 .orElseThrow(() -> new RuntimeException("Company not found"));
+
         User user = User.builder().userName(createUser.getUserName()).role(createUser.getRole())
                 .password(passwordEncoder.encode(createUser.getPassword())).email(createUser.getEmail())
                 .companyId(company.getId()).build();
@@ -78,6 +79,7 @@ public class UserService {
                         request.getCompany())) {
             Company company = companyRepository.findByCompanyName(request.getCompany())
                     .orElseThrow(() -> new RuntimeException("Company not found by Name"));
+
             existingUser.setCompanyId(company.getId());
         }
 
@@ -88,5 +90,18 @@ public class UserService {
         return userRepository.findAll().stream()
                 .map(user -> GetUserResponse.builder().user(user).build())
                 .collect(Collectors.toList());
+    }
+
+    public List<GetUserResponse> getUsersByCompany(long companyId) {
+        return userRepository.findByCompanyId(companyId).stream()
+                .map(user -> GetUserResponse.builder().user(user).build())
+                .collect(Collectors.toList());
+    }
+
+    public void deleteUser(long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User not found with id: " + id);
+        }
+        userRepository.deleteById(id);
     }
 }

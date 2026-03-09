@@ -15,10 +15,11 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    public String generateToken(Long userId, String role) {
+    public String generateToken(Long userId, String role, Long companyId) {
         return Jwts.builder()
                 .claim("userId", userId)
                 .claim("role", role)
+                .claim("companyId", companyId)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
@@ -39,6 +40,10 @@ public class JwtUtil {
 
     public String getRole(String token) {
         return extractClaims(token).get("role", String.class);
+    }
+
+    public Long getCompanyId(String token) {
+        return extractClaims(token).get("companyId", Long.class);
     }
 
     public boolean isTokenValid(String token) {

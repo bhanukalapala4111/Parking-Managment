@@ -31,7 +31,7 @@ public class AuthService {
                 throw new RuntimeException("User role is not assigned");
             }
 
-            String token = jwtUtil.generateToken(user.getId(), user.getRole().name());
+            String token = jwtUtil.generateToken(user.getId(), user.getRole().name(), user.getCompanyId());
 
             return new LoginResponse(user.getId(), token, user.getUserName(), user.getRole());
         } catch (AuthenticationException e) {

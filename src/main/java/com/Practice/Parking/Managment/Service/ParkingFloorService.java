@@ -35,6 +35,7 @@ public class ParkingFloorService {
         ParkingFloor existParkingFloor = this.parkingRepository.findById(Id)
                 .orElseThrow(() -> new RuntimeException("Parking Floor not found"));
         ParkingFloor updatedParkingFloor = this.merge(existParkingFloor, parkingFloor);
+        this.parkingRepository.save(updatedParkingFloor);
         return GetParkingFloorResponse.builder().parkingFloor(updatedParkingFloor).build();
     }
 

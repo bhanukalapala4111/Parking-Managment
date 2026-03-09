@@ -111,4 +111,8 @@ public class ParkingSlotService {
     public List<ParkingSlot> getUserBookings(long userId) {
         return parkingSlot.findByOccupantUserId(userId);
     }
+
+    public List<ParkingSlot> getSlotsByCompany(long companyId) {
+        return parkingSlot.findByCompanyId(companyId);
+    }
 }
