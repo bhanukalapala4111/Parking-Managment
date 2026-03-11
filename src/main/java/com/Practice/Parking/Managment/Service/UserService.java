@@ -1,9 +1,13 @@
 package com.Practice.Parking.Managment.Service;
 
+import com.Practice.Parking.Managment.Model.ParkingSlot;
+import org.springframework.context.annotation.Lazy;
+
 import com.Practice.Parking.Managment.Dtos.CreateUserRequest;
 import com.Practice.Parking.Managment.Dtos.GetUserResponse;
 import com.Practice.Parking.Managment.Dtos.UpdateUserRequest;
 import com.Practice.Parking.Managment.Model.Company;
+import com.Practice.Parking.Managment.Model.Role;
 import com.Practice.Parking.Managment.Model.User;
 import com.Practice.Parking.Managment.Repository.CompanyRepository;
 import com.Practice.Parking.Managment.Repository.UserRepository;
@@ -27,7 +31,15 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    @Lazy
+    ParkingSlotService parkingSlotService;
+
     public long createUser(CreateUserRequest createUser) {
+        if (createUser.getRole() == Role.ADMIN) {
+            throw new RuntimeException("ADMIN users cannot be created through the API.");
+        }
+
         Company company = companyRepository.findByCompanyName(createUser.getCompany())
                 .orElseThrow(() -> new RuntimeException("Company not found"));
 
@@ -70,6 +82,9 @@ public class UserService {
 
         if (request.getRole() != null &&
                 existingUser.getRole() != request.getRole()) {
+            if (request.getRole() == Role.ADMIN) {
+                throw new RuntimeException("Cannot assign ADMIN role through the API.");
+            }
             existingUser.setRole(request.getRole());
         }
 
@@ -88,6 +103,7 @@ public class UserService {
 
     public List<GetUserResponse> getAllUsers() {
         return userRepository.findAll().stream()
+                .filter(user -> user.getRole() != Role.ADMIN)
                 .map(user -> GetUserResponse.builder().user(user).build())
                 .collect(Collectors.toList());
     }
@@ -102,6 +118,15 @@ public class UserService {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("User not found with id: " + id);
         }
+
+        // Release all slots booked by user before deletion
+        List<ParkingSlot> bookedSlots = parkingSlotService.getUserBookings(id);
+        if (bookedSlots != null && !bookedSlots.isEmpty()) {
+            for (ParkingSlot slot : bookedSlots) {
+                parkingSlotService.releaseSlot(slot.getId());
+            }
+        }
+
         userRepository.deleteById(id);
     }
 }

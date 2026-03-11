@@ -1,6 +1,9 @@
 package com.Practice.Parking.Managment.Security.Auth;
 
+import com.Practice.Parking.Managment.Model.Admin;
+import com.Practice.Parking.Managment.Model.Role;
 import com.Practice.Parking.Managment.Model.User;
+import com.Practice.Parking.Managment.Repository.AdminRepository;
 import com.Practice.Parking.Managment.Repository.UserRepository;
 import com.Practice.Parking.Managment.Security.Jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -16,6 +21,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
 
     public LoginResponse login(LoginRequest request) {
         try {
@@ -23,6 +29,13 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
                             request.getPassword()));
+
+            Optional<Admin> admin = adminRepository.findByEmail(request.getEmail());
+            if (admin.isPresent()) {
+                Admin a = admin.get();
+                String token = jwtUtil.generateToken(a.getId(), "ADMIN", 0L);
+                return new LoginResponse(a.getId(), token, a.getUserName(), Role.ADMIN);
+            }
 
             User user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new RuntimeException("User not found after successful authentication"));
